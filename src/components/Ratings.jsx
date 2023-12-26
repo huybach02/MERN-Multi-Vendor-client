@@ -1,6 +1,6 @@
 import React from "react";
-import {IoIosStar} from "react-icons/io";
 import {IoIosStarHalf} from "react-icons/io";
+import {IoIosStar} from "react-icons/io";
 import {IoIosStarOutline} from "react-icons/io";
 
 const Ratings = ({ratings, size = 18}) => {

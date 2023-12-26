@@ -4,16 +4,9 @@ import "react-multi-carousel/lib/styles.css";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-const categories = [
-  "Tablet",
-  "Smartphone",
-  "Laptop",
-  "Watch",
-  "Headphone",
-  "TV",
-];
-
 const Category = () => {
+  const {categories} = useSelector((state) => state.home);
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: {max: 4000, min: 3000},
@@ -53,26 +46,26 @@ const Category = () => {
         responsive={responsive}
         transitionDuration={500}
       >
-        {categories.map((item, i) => (
-          <Link
-            className="h-[200px] border rounded-md block mx-1"
-            key={i}
-            to="#"
-          >
-            <div className="w-full h-full ">
-              <img
-                src="https://cdn.hoanghamobile.com/i/preview/Uploads/2023/09/13/iphone-15-pro-natural-titanium-pure-back-iphone-15-pro-natural-titanium-pure-front-2up-screen-usen.png"
-                alt=""
-                className="w-auto h-[90%] mx-auto"
-              />
-              <div className="absolute bottom-1 w-full mx-auto font-bold left-0 flex justify-center items-center">
-                <span className="py-1 px-2 w-full mx-3 text-center bg-main text-white rounded-md">
-                  {item}
-                </span>
+        {categories?.length > 0 &&
+          categories?.map((item, index) => (
+            <Link
+              className="h-[200px] border rounded-md block mx-1"
+              to={item.slug}
+            >
+              <div className="w-full h-full ">
+                <img
+                  src={item.image}
+                  alt=""
+                  className="w-auto h-[90%] mx-auto p-5"
+                />
+                <div className="absolute bottom-1 w-full mx-auto font-bold left-0 flex justify-center items-center">
+                  <span className="py-1 px-2 w-full mx-3 text-center bg-main text-white rounded-md">
+                    {item.name}
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
       </Carousel>
     </div>
   );

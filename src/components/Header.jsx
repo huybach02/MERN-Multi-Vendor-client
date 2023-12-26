@@ -13,18 +13,12 @@ import {FaHeart} from "react-icons/fa";
 import {FaShoppingCart} from "react-icons/fa";
 import {IoCall} from "react-icons/io5";
 import {FaCaretUp} from "react-icons/fa";
-
-const categories = [
-  "Tablet",
-  "Smartphone",
-  "Laptop",
-  "Watch",
-  "Headphone",
-  "TV",
-];
+import {useSelector} from "react-redux";
 
 const Header = () => {
   const {pathname} = useLocation();
+
+  const {categories} = useSelector((state) => state.home);
 
   const user = false;
   const [showSidebar, setShowSidebar] = useState(false);
@@ -179,14 +173,17 @@ const Header = () => {
                         1
                       </div>
                     </div>
-                    <div className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-gray-400/30">
+                    <Link
+                      to={"/cart"}
+                      className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-gray-400/30"
+                    >
                       <span title="My Cart">
-                        <FaShoppingCart size={20} color="#5babd4" />
+                        <FaShoppingCart size={20} color="#284196" />
                       </span>
                       <div className="w-[20px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[12px]">
                         1
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -349,11 +346,12 @@ const Header = () => {
                   <option value="" selected disabled>
                     Select Category
                   </option>
-                  {categories.map((item, index) => (
-                    <option key={index} value={item} className="pb-2">
-                      {item}
-                    </option>
-                  ))}
+                  {categories?.length > 0 &&
+                    categories?.map((item, index) => (
+                      <option key={index} value={item.name} className="pb-2">
+                        {item.name}
+                      </option>
+                    ))}
                 </select>
               </div>
               <input
@@ -396,18 +394,25 @@ const Header = () => {
                 className={`${
                   !categoryShow
                     ? "h-0 rounded-md text-white"
-                    : "h-fit rounded-md bg-main"
+                    : "h-[500px] rounded-md bg-main"
                 } w-full mt-1 overflow-hidden transition-all md-lg:relative duration-500 absolute z-50 py-2`}
               >
-                <div className="font-medium flex flex-col">
-                  {categories.map((item, index) => (
-                    <Link
-                      key={index}
-                      className="py-2 px-5 hover:bg-gray-400/50"
-                    >
-                      {item}
-                    </Link>
-                  ))}
+                <div className="font-medium flex flex-col overflow-y-auto h-full">
+                  {categories?.length > 0 &&
+                    categories?.map((item, index) => (
+                      <Link
+                        to={`/${item.slug}`}
+                        key={index}
+                        className="py-2 px-5 hover:bg-gray-400/50 flex items-center gap-3"
+                      >
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="w-[40px] h-[40px] overflow-hidden object-cover rounded-md"
+                        />
+                        {item.name}
+                      </Link>
+                    ))}
                 </div>
               </div>
             </div>
@@ -426,11 +431,16 @@ const Header = () => {
                       <option value="" selected disabled>
                         Select Category
                       </option>
-                      {categories.map((item, index) => (
-                        <option key={index} value={item} className="pb-2">
-                          {item}
-                        </option>
-                      ))}
+                      {categories?.length > 0 &&
+                        categories?.map((item, index) => (
+                          <option
+                            key={index}
+                            value={item.name}
+                            className="pb-2"
+                          >
+                            {item.name}
+                          </option>
+                        ))}
                     </select>
                   </div>
                   <input
