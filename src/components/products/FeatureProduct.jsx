@@ -19,7 +19,10 @@ const FeatureProduct = () => {
         <div className="w-full grid grid-cols-6 md-lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-3">
           {products.length > 0 &&
             products?.map((item, index) => (
-              <div className="group transition-all duration-500 hover:shadow-lg hover:-mt-2 rounded-md mb-5">
+              <div
+                key={index}
+                className="group transition-all duration-500 hover:shadow-lg hover:-mt-2 rounded-md mb-5"
+              >
                 <div className="relative overflow-hidden">
                   {item.discount > 0 && (
                     <div className="bg-red-400 flex items-center justify-center absolute text-white py-3 px-2 rounded-full left-1 top-1 font-semibold">
@@ -29,7 +32,7 @@ const FeatureProduct = () => {
                   <img
                     src={item.images.length > 0 && item.images[0]}
                     alt=""
-                    className="w-full"
+                    className="w-full p-3"
                   />
                   <div className="absolute top-5  flex flex-col gap-2 -right-full group-hover:right-1 transition-all duration-500">
                     <span className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110">

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {FaAngleDoubleRight} from "react-icons/fa";
 import Footer from "../components/Footer";
 import {Range} from "react-range";
@@ -19,11 +19,13 @@ import {
   query_products,
 } from "../store/reducers/homeReducer";
 
-const Shop = () => {
+const CategoryShop = () => {
   const dispatch = useDispatch();
+  const {category} = useParams();
 
-  const {products, totalProduct, latestProducts, priceRange, categories} =
-    useSelector((state) => state.home);
+  const {products, totalProduct, latestProducts, priceRange} = useSelector(
+    (state) => state.home
+  );
 
   const [filter, setFilter] = useState(false);
   const [state, setState] = useState({
@@ -31,13 +33,12 @@ const Shop = () => {
   });
   const [pageNumber, setPageNumber] = useState(1);
   const [styles, setStyles] = useState("grid");
-  const [category, setCategory] = useState("");
   const [rating, setRating] = useState("");
   const [sortPrice, setSortPrice] = useState("");
 
   useEffect(() => {
     dispatch(get_categories());
-    dispatch(get_products());
+    // dispatch(get_products());
     dispatch(price_range_products());
   }, []);
 
@@ -47,29 +48,24 @@ const Shop = () => {
     });
   }, [priceRange]);
 
-  const queryCategory = (e, value) => {
-    if (e.target.checked) {
-      setCategory(value);
-    } else {
-      setCategory("");
-    }
-  };
-
   const resetRating = () => {
     setRating("");
   };
 
   useEffect(() => {
-    dispatch(
-      query_products({
-        low: state.values[0],
-        high: state.values[1],
-        category,
-        rating,
-        sortPrice,
-        pageNumber,
-      })
-    );
+    const timeout = setTimeout(() => {
+      dispatch(
+        query_products({
+          low: state.values[0],
+          high: state.values[1],
+          category,
+          rating,
+          sortPrice,
+          pageNumber,
+        })
+      );
+    }, 200);
+    return () => clearTimeout(timeout);
   }, [
     state.values[0],
     state.values[1],
@@ -115,26 +111,6 @@ const Shop = () => {
                     : "md:h-auto md:overflow-auto md:mb-6"
                 }`}
               >
-                <h2 className="md-lg:text-lg text-2xl font-semibold mb-3 text-blue-600">
-                  Category
-                </h2>
-                <ul>
-                  {categories?.length > 0 &&
-                    categories?.map((item, index) => (
-                      <li key={index} className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          id={item.name}
-                          className="cursor-pointer"
-                          onChange={(e) => queryCategory(e, item.name)}
-                          checked={category === item.name}
-                        />
-                        <label htmlFor={item.name} className="cursor-pointer">
-                          {item.name}
-                        </label>
-                      </li>
-                    ))}
-                </ul>
                 <div className="py-3 flex flex-col gap-3">
                   <h2 className="md-lg:text-lg text-2xl font-semibold mb-3 text-blue-600">
                     Price
@@ -292,7 +268,7 @@ const Shop = () => {
                 <div className="">
                   <div className="py-4 bg-white mb-10 px-3 rounded-md flex justify-between items-start border border-blue-600">
                     <h2 className="text-lg font-medium text-blue-600">
-                      {totalProduct} Products
+                      {totalProduct} Products Of {category}
                     </h2>
                     <div className="flex justify-center items-center gap-3">
                       <select
@@ -330,4 +306,4 @@ const Shop = () => {
   );
 };
 
-export default Shop;
+export default CategoryShop;

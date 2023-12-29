@@ -49,8 +49,9 @@ const Category = () => {
         {categories?.length > 0 &&
           categories?.map((item, index) => (
             <Link
+              key={index}
               className="h-[200px] border rounded-md block mx-1"
-              to={item.slug}
+              to={`/products/${item.name}`}
             >
               <div className="w-full h-full ">
                 <img

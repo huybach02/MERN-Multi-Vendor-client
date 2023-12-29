@@ -1,10 +1,22 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import {FaFacebookF} from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {AiOutlineGoogle} from "react-icons/ai";
+import {toast} from "react-hot-toast";
+import PuffLoader from "react-spinners/PuffLoader";
+import {customer_login, clearMessage} from "../store/reducers/authReducer";
+import {useDispatch, useSelector} from "react-redux";
+
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {loader, errorMessage, successMessage} = useSelector(
+    (state) => state.auth
+  );
+
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -18,10 +30,30 @@ const Login = () => {
   };
   const login = (e) => {
     e.preventDefault();
-    console.log(state);
+    dispatch(customer_login(state));
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(clearMessage());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(clearMessage());
+      setTimeout(() => {
+        navigate("/");
+      }, 300);
+    }
+  }, [errorMessage, successMessage]);
+
   return (
     <div>
+      {loader && (
+        <div className="w-screen h-screen flex justify-center items-center bg-black/50 fixed top-0 left-0 z-50">
+          <PuffLoader color="#1c20eb" />
+        </div>
+      )}
       <Header />
       <div className="bg-slate-200 mt-4">
         <div className="w-full justify-center items-center p-10">
@@ -45,7 +77,7 @@ const Login = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-1 mb-4">
-                    <label htmlFor="password">Passoword</label>
+                    <label htmlFor="password">Password</label>
                     <input
                       onChange={inputHandle}
                       value={state.password}

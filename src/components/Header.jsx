@@ -1,7 +1,7 @@
 import React from "react";
 import {FcGoogle} from "react-icons/fc";
 import {IoMail} from "react-icons/io5";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {FaFacebook} from "react-icons/fa";
 import {FaYoutube} from "react-icons/fa";
 import {FaCaretDown} from "react-icons/fa";
@@ -13,18 +13,27 @@ import {FaHeart} from "react-icons/fa";
 import {FaShoppingCart} from "react-icons/fa";
 import {IoCall} from "react-icons/io5";
 import {FaCaretUp} from "react-icons/fa";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 
 const Header = () => {
   const {pathname} = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {categories} = useSelector((state) => state.home);
+  const {userInfo} = useSelector((state) => state.auth);
 
   const user = false;
   const [showSidebar, setShowSidebar] = useState(false);
   const [categoryShow, setCategoryShow] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [category, setCategory] = useState("");
+
+  const searchProduct = () => {
+    navigate(
+      `/products/search?category=${category}&&searchValue=${searchValue}`
+    );
+  };
 
   return (
     <div className="w-full bg-white">
@@ -54,12 +63,12 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="flex cursor-pointer text-sm justify-center items-center gap-1 relative  before:absolute before:h-[18px] before:w-[1px] before:bg-gray-500 before:-left-[20px]">
-                  {user ? (
+                  {userInfo?.id ? (
                     <Link to={"/dashboard"} className="flex items-center gap-2">
                       <span>
                         <FaUserCircle size={20} />
                       </span>
-                      <span>Huy Bach</span>
+                      <span>{userInfo.name}</span>
                     </Link>
                   ) : (
                     <Link to={"/login"} className="flex items-center gap-2">
@@ -215,12 +224,12 @@ const Header = () => {
               <h2 className="text-center font-semibold">E-commerce Market</h2>
               <div className="flex items-center justify-center gap-10 py-3 border-t border-b border-gray-400/50">
                 <div className="flex justify-center items-center gap-10">
-                  {user ? (
+                  {userInfo?.id ? (
                     <Link to={"/dashboard"} className="flex items-center gap-2">
                       <span>
                         <FaUserCircle size={20} />
                       </span>
-                      <span>Huy Bach</span>
+                      <span>{userInfo?.name}</span>
                     </Link>
                   ) : (
                     <Link to={"/login"} className="flex items-center gap-2">
@@ -361,7 +370,10 @@ const Header = () => {
                 onChange={(e) => setSearchValue(e.target.value)}
                 value={searchValue}
               />
-              <button className="bg-main absolute right-0 px-3 h-full font-semibold text-sm uppercase rounded-r-md">
+              <button
+                className="bg-main absolute right-0 px-3 h-full font-semibold text-sm uppercase rounded-r-md"
+                onClick={searchProduct}
+              >
                 Search
               </button>
             </div>
@@ -397,20 +409,22 @@ const Header = () => {
                     : "h-[500px] rounded-md bg-main"
                 } w-full mt-1 overflow-hidden transition-all md-lg:relative duration-500 absolute z-50 py-2`}
               >
-                <div className="font-medium flex flex-col overflow-y-auto h-full">
+                <div className="font-medium flex flex-col overflow-y-auto h-[500px]">
                   {categories?.length > 0 &&
                     categories?.map((item, index) => (
                       <Link
-                        to={`/${item.slug}`}
+                        to={`/products/${item.name}`}
                         key={index}
                         className="py-2 px-5 hover:bg-gray-400/50 flex items-center gap-3"
                       >
                         <img
                           src={item.image}
                           alt=""
-                          className="w-[40px] h-[40px] overflow-hidden object-cover rounded-md"
+                          className={`w-[40px] h-[40px] overflow-hidden object-cover rounded-md ${
+                            !categoryShow && "hidden"
+                          }`}
                         />
-                        {item.name}
+                        {categoryShow ? item.name : ""}
                       </Link>
                     ))}
                 </div>
@@ -450,7 +464,10 @@ const Header = () => {
                     onChange={(e) => setSearchValue(e.target.value)}
                     value={searchValue}
                   />
-                  <button className="bg-main absolute right-0 px-8 h-full font-semibold uppercase rounded-r-md">
+                  <button
+                    className="bg-main absolute right-0 px-8 h-full font-semibold uppercase rounded-r-md"
+                    onClick={searchProduct}
+                  >
                     Search
                   </button>
                 </div>

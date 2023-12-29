@@ -1,11 +1,22 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import {FaFacebookF} from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {AiOutlineGoogle} from "react-icons/ai";
+import {useDispatch, useSelector} from "react-redux";
+import {customer_register, clearMessage} from "../store/reducers/authReducer";
+import {toast} from "react-hot-toast";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {loader, errorMessage, successMessage} = useSelector(
+    (state) => state.auth
+  );
+
   const [state, setState] = useState({
     name: "",
     email: "",
@@ -20,10 +31,29 @@ const Register = () => {
   };
   const register = (e) => {
     e.preventDefault();
-    console.log(state);
+    dispatch(customer_register(state));
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(clearMessage());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(clearMessage());
+      setTimeout(() => {
+        navigate("/login");
+      }, 300);
+    }
+  }, [errorMessage, successMessage]);
   return (
     <div>
+      {loader && (
+        <div className="w-screen h-screen flex justify-center items-center bg-black/50 fixed top-0 left-0 z-50">
+          <PuffLoader color="#1c20eb" />
+        </div>
+      )}
       <Header />
       <div className="bg-slate-200 mt-4">
         <div className="w-full justify-center items-center p-10">
@@ -44,6 +74,7 @@ const Register = () => {
                       id="name"
                       name="name"
                       placeholder="name"
+                      required
                     />
                   </div>
                   <div className="flex flex-col gap-1 mb-2">
@@ -56,10 +87,11 @@ const Register = () => {
                       id="email"
                       name="email"
                       placeholder="email"
+                      required
                     />
                   </div>
                   <div className="flex flex-col gap-1 mb-4">
-                    <label htmlFor="password">Passoword</label>
+                    <label htmlFor="password">Password</label>
                     <input
                       onChange={inputHandle}
                       value={state.password}
@@ -68,6 +100,7 @@ const Register = () => {
                       id="password"
                       name="password"
                       placeholder="password"
+                      required
                     />
                   </div>
                   <button className="px-8 w-full py-2 bg-main shadow-lg hover:shadow-indigo-500/30 text-white rounded-md">

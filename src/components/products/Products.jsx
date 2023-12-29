@@ -24,7 +24,6 @@ const responsive = {
 };
 
 const Products = ({title, titleSmall, products}) => {
-  console.log("products: ", products);
   const ButtonGroup = ({next, previous}) => {
     return (
       <div className="flex justify-between items-center">
