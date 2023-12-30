@@ -1,13 +1,47 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {FaHeart} from "react-icons/fa";
 import {IoEyeSharp} from "react-icons/io5";
 import {FaShoppingCart} from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Ratings from "../Ratings";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {add_to_cart, clearMessage} from "../../store/reducers/cartReducer";
+import toast from "react-hot-toast";
 
 const FeatureProduct = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {products} = useSelector((state) => state.home);
+  const {userInfo} = useSelector((state) => state.auth);
+  const {loader, errorMessage, successMessage} = useSelector(
+    (state) => state.cart
+  );
+
+  const addToCart = (id) => {
+    if (userInfo.id) {
+      dispatch(
+        add_to_cart({
+          userId: userInfo.id,
+          quantity: 1,
+          productId: id,
+        })
+      );
+    } else {
+      toast.error("Please login first");
+      navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(clearMessage());
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(clearMessage());
+    }
+  }, [errorMessage, successMessage]);
 
   return (
     <div className="w-[85%] mx-auto flex flex-wrap pb-10">
@@ -44,7 +78,10 @@ const FeatureProduct = () => {
                     >
                       <IoEyeSharp />
                     </Link>
-                    <span className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110">
+                    <span
+                      className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110"
+                      onClick={() => addToCart(item._id)}
+                    >
                       <FaShoppingCart />
                     </span>
                   </div>

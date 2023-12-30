@@ -6,7 +6,9 @@ import {FaAngleDoubleRight} from "react-icons/fa";
 import {IoStorefront} from "react-icons/io5";
 
 const Shipping = () => {
-  // const {state} = useLocation();
+  const {
+    state: {products},
+  } = useLocation();
   const [state, setState] = useState({
     name: "",
     address: "",
@@ -32,6 +34,8 @@ const Shipping = () => {
       setRes(true);
     }
   };
+
+  console.log(products);
 
   return (
     <div>

@@ -14,6 +14,7 @@ import {FaShoppingCart} from "react-icons/fa";
 import {IoCall} from "react-icons/io5";
 import {FaCaretUp} from "react-icons/fa";
 import {useSelector, useDispatch} from "react-redux";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const {pathname} = useLocation();
@@ -22,6 +23,7 @@ const Header = () => {
 
   const {categories} = useSelector((state) => state.home);
   const {userInfo} = useSelector((state) => state.auth);
+  const {cartProductCount, wishListCount} = useSelector((state) => state.cart);
 
   const user = false;
   const [showSidebar, setShowSidebar] = useState(false);
@@ -33,6 +35,15 @@ const Header = () => {
     navigate(
       `/products/search?category=${category}&&searchValue=${searchValue}`
     );
+  };
+
+  const redirectToCart = () => {
+    if (userInfo.id) {
+      navigate("/cart");
+    } else {
+      toast.error("Please login first");
+      navigate("/login");
+    }
   };
 
   return (
@@ -179,20 +190,20 @@ const Header = () => {
                         <FaHeart size={20} color="#ec3850" />
                       </span>
                       <div className="w-[20px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[12px]">
-                        1
+                        {wishListCount}
                       </div>
                     </div>
-                    <Link
-                      to={"/cart"}
+                    <div
                       className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-gray-400/30"
+                      onClick={redirectToCart}
                     >
                       <span title="My Cart">
                         <FaShoppingCart size={20} color="#284196" />
                       </span>
-                      <div className="w-[20px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[12px]">
-                        1
+                      <div className="w-[24px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[10px]">
+                        {cartProductCount > 99 ? "99+" : cartProductCount}
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </div>

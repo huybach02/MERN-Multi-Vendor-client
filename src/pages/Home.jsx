@@ -7,16 +7,21 @@ import Products from "../components/products/Products";
 import Footer from "../components/Footer";
 import {useDispatch, useSelector} from "react-redux";
 import {get_categories, get_products} from "../store/reducers/homeReducer";
+import {get_cart_products} from "../store/reducers/cartReducer";
 
 const Home = () => {
   const dispatch = useDispatch();
   const {latestProducts, topRatedProducts, discountProducts} = useSelector(
     (state) => state.home
   );
+  const {userInfo} = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(get_categories());
     dispatch(get_products());
+    if (userInfo.id) {
+      dispatch(get_cart_products(userInfo.id));
+    }
   }, []);
 
   return (
