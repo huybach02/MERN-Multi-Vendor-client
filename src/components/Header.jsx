@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {FcGoogle} from "react-icons/fc";
 import {IoMail} from "react-icons/io5";
 import {Link, useLocation, useNavigate} from "react-router-dom";
@@ -15,6 +15,7 @@ import {IoCall} from "react-icons/io5";
 import {FaCaretUp} from "react-icons/fa";
 import {useSelector, useDispatch} from "react-redux";
 import toast from "react-hot-toast";
+import {get_categories} from "../store/reducers/homeReducer";
 
 const Header = () => {
   const {pathname} = useLocation();
@@ -45,6 +46,10 @@ const Header = () => {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    dispatch(get_categories());
+  }, []);
 
   return (
     <div className="w-full bg-white">

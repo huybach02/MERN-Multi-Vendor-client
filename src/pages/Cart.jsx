@@ -34,7 +34,7 @@ const Cart = () => {
         products: cartProducts,
         price: price,
         shipping_fee: shippingFee,
-        item: buyProductItem,
+        items: buyProductItem,
       },
     });
   };

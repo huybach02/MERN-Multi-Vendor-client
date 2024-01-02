@@ -1,14 +1,20 @@
 import React, {useState} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import {useLocation, Link} from "react-router-dom";
+import {useLocation, Link, useNavigate} from "react-router-dom";
 import {FaAngleDoubleRight} from "react-icons/fa";
 import {IoStorefront} from "react-icons/io5";
+import {useDispatch, useSelector} from "react-redux";
+import {place_order} from "../store/reducers/orderReducer";
 
 const Shipping = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
-    state: {products},
+    state: {products, price, shipping_fee, items},
   } = useLocation();
+  const {userInfo} = useSelector((state) => state.auth);
+
   const [state, setState] = useState({
     name: "",
     address: "",
@@ -35,7 +41,19 @@ const Shipping = () => {
     }
   };
 
-  console.log(products);
+  const placeOrder = () => {
+    dispatch(
+      place_order({
+        price,
+        products,
+        shipping_fee,
+        shippingInfo: state,
+        userId: userInfo.id,
+        navigate,
+        items,
+      })
+    );
+  };
 
   return (
     <div>
@@ -208,50 +226,56 @@ const Shipping = () => {
                     </div>
                   )}
                 </div>
-                {[1, 2, 3, 4].map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex shadow-md border border-blue-600 rounded-md p-4 flex-col gap-2 relative"
-                  >
-                    <div className="flex items-center mb-3">
-                      <h2 className="text-md text-blue-600 font-semibold flex items-center gap-2">
-                        <IoStorefront size={20} />
-                        ABC Shop
-                      </h2>
-                    </div>
-                    {[1, 2].map((item, index) => (
-                      <div key={index} className="w-full flex flex-wrap">
-                        <div className="flex sm:w-full gap-2 w-6/12">
-                          <div className="flex gap-3 items-center">
-                            <img
-                              src="https://cdn.hoanghamobile.com/i/preview/Uploads/2023/09/13/iphone-15-pro-natural-titanium-pure-back-iphone-15-pro-natural-titanium-pure-front-2up-screen-usen.png"
-                              alt=""
-                              className="w-[80px]"
-                            />
-                            <div>
-                              <h2 className="font-semibold text-lg text-blue-600">
-                                Iphone 15 ProMax
-                              </h2>
-                              <span>Brand: Apple</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-end w-6/12 sm:w-full sm:mt-3">
-                          <div className="flex items-center gap-3 flex-wrap">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h2 className="line-through md-lg:text-sm">
-                                $1234
-                              </h2>
-                              <p className="font-semibold md-lg:text-lg text-xl text-blue-600">
-                                $1000
-                              </p>
-                            </div>
-                          </div>
-                        </div>
+                {products.length > 0 &&
+                  products?.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex shadow-md border border-blue-600 rounded-md p-4 flex-col gap-2 relative"
+                    >
+                      <div className="flex items-center mb-3">
+                        <h2 className="text-md text-blue-600 font-semibold flex items-center gap-2">
+                          <IoStorefront size={20} />
+                          {item.shopName}
+                        </h2>
                       </div>
-                    ))}
-                  </div>
-                ))}
+                      {item?.product?.map((i, index) => (
+                        <div key={index} className="w-full flex flex-wrap">
+                          <div className="flex sm:w-full gap-2 w-6/12">
+                            <div className="flex gap-3 items-center">
+                              <img
+                                src={i.productInfo.images[0]}
+                                alt=""
+                                className="w-[80px]"
+                              />
+                              <div>
+                                <h2 className="font-semibold text-lg text-blue-600">
+                                  {i.productInfo.name}
+                                </h2>
+                                <span>Brand: {i.productInfo.brand}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-end w-6/12 sm:w-full sm:mt-3">
+                            <div className="flex items-center gap-3 flex-wrap">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h2 className="line-through md-lg:text-sm">
+                                  ${i.productInfo.price}
+                                </h2>
+                                <p className="font-semibold md-lg:text-lg text-xl text-blue-600">
+                                  $
+                                  {i.productInfo.price -
+                                    (i.productInfo.price *
+                                      i.productInfo.discount) /
+                                      100}
+                                </p>
+                                <p>Quantity: {i.quantity}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
               </div>
             </div>
             <div className="w-[30%] md-lg:w-full">
@@ -261,25 +285,26 @@ const Shipping = () => {
                 </h2>
                 <div className="flex justify-between items-center">
                   <span>Items Total</span>
-                  <span>$855</span>
+                  <span>${price}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Delivery Fee</span>
-                  <span>$85</span>
+                  <span>${shipping_fee}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Total Payment</span>
-                  <span>$855</span>
+                  <span>${price + shipping_fee}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Total</span>
-                  <span>$955</span>
+                  <span>${price + shipping_fee}</span>
                 </div>
                 <button
                   disabled={res ? false : true}
                   className={`px-5 py-2 rounded-md hover:shadow-lg ${
                     res ? "bg-main" : "bg-gray-400"
                   } text-sm text-white uppercase`}
+                  onClick={placeOrder}
                 >
                   Place Order
                 </button>
