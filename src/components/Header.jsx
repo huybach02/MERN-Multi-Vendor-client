@@ -16,6 +16,10 @@ import {FaCaretUp} from "react-icons/fa";
 import {useSelector, useDispatch} from "react-redux";
 import toast from "react-hot-toast";
 import {get_categories} from "../store/reducers/homeReducer";
+import {
+  get_cart_products,
+  get_wishlist_products,
+} from "../store/reducers/cartReducer";
 
 const Header = () => {
   const {pathname} = useLocation();
@@ -47,8 +51,21 @@ const Header = () => {
     }
   };
 
+  const redirectToWishlist = () => {
+    if (userInfo.id) {
+      navigate("/dashboard/my-wishlist");
+    } else {
+      toast.error("Please login first");
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     dispatch(get_categories());
+    if (userInfo?.id) {
+      dispatch(get_wishlist_products(userInfo?.id));
+      dispatch(get_cart_products(userInfo.id));
+    }
   }, []);
 
   return (
@@ -190,7 +207,10 @@ const Header = () => {
                 </ul>
                 <div className="flex md-lg:hidden justify-center items-center gap-5">
                   <div className="flex justify-center gap-5">
-                    <div className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-gray-400/30">
+                    <div
+                      className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-gray-400/30"
+                      onClick={redirectToWishlist}
+                    >
                       <span title="Wishlist">
                         <FaHeart size={20} color="#ec3850" />
                       </span>

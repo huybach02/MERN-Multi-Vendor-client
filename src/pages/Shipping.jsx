@@ -235,7 +235,8 @@ const Shipping = () => {
                       <div className="flex items-center mb-3">
                         <h2 className="text-md text-blue-600 font-semibold flex items-center gap-2">
                           <IoStorefront size={20} />
-                          {item.shopName}
+                          {item.shopName ||
+                            item.product[0].productInfo.shopName}
                         </h2>
                       </div>
                       {item?.product?.map((i, index) => (

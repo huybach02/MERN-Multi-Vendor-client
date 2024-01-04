@@ -5,7 +5,12 @@ import {FaShoppingCart} from "react-icons/fa";
 import {Link, useNavigate} from "react-router-dom";
 import Ratings from "../Ratings";
 import {useDispatch, useSelector} from "react-redux";
-import {add_to_cart, clearMessage} from "../../store/reducers/cartReducer";
+import {
+  add_to_cart,
+  add_to_wishlist,
+  clearMessage,
+  get_cart_products,
+} from "../../store/reducers/cartReducer";
 import toast from "react-hot-toast";
 
 const FeatureProduct = () => {
@@ -26,10 +31,28 @@ const FeatureProduct = () => {
           productId: id,
         })
       );
+      setTimeout(() => {
+        dispatch(get_cart_products(userInfo.id));
+      }, 200);
     } else {
       toast.error("Please login first");
       navigate("/login");
     }
+  };
+
+  const addToWishList = (product) => {
+    dispatch(
+      add_to_wishlist({
+        userId: userInfo.id,
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.images[0],
+        discount: product.discount,
+        rating: product.rating,
+        slug: product.slug,
+      })
+    );
   };
 
   useEffect(() => {
@@ -69,11 +92,14 @@ const FeatureProduct = () => {
                     className="w-full p-3"
                   />
                   <div className="absolute top-5  flex flex-col gap-2 -right-full group-hover:right-1 transition-all duration-500">
-                    <span className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110">
+                    <span
+                      className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110"
+                      onClick={() => addToWishList(item)}
+                    >
                       <FaHeart />
                     </span>
                     <Link
-                      to={`/product/details/123`}
+                      to={`/product/details/${item.slug}`}
                       className="w-[38px] h-[38px] cursor-pointer bg-main flex justify-center items-center rounded-full hover:bg-gray-400/30 transition-all hover:scale-110"
                     >
                       <IoEyeSharp />
@@ -88,7 +114,7 @@ const FeatureProduct = () => {
                 </div>
                 <div className="py-2 px-4 text-blue-600 flex flex-col justify-between">
                   <Link
-                    to={`/product/details/${item._id}`}
+                    to={`/product/details/${item.slug}`}
                     className="flex justify-center font-semibold text-lg md-lg:text-sm"
                   >
                     {item.name.length > 20

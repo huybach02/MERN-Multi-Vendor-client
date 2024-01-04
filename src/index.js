@@ -6,11 +6,14 @@ import reportWebVitals from "./reportWebVitals";
 import store from "./store";
 import {Provider} from "react-redux";
 import {Toaster} from "react-hot-toast";
+import {BrowserRouter} from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
     <Toaster />
   </Provider>
 );

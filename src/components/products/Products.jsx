@@ -73,7 +73,7 @@ const Products = ({title, titleSmall, products}) => {
             <div key={index} className="flex flex-col-reverse gap-2">
               {item?.map((i, j) => (
                 <Link
-                  to={`/product/details/${i._id}`}
+                  to={`/product/details/${i.slug}`}
                   key={j}
                   className="flex items-center"
                 >
