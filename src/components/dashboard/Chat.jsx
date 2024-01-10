@@ -212,7 +212,7 @@ const Chat = () => {
                             <span>{item.message}</span>
                           </div>
                           <img
-                            src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_640.png"
+                            src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
                             alt=""
                             className="w-10 h-10"
                           />

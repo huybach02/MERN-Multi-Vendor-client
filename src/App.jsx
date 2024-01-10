@@ -18,6 +18,7 @@ import ChangePassword from "./components/dashboard/ChangePassword";
 import OrderDetail from "./components/dashboard/OrderDetail";
 import {useEffect} from "react";
 import Chat from "./components/dashboard/Chat";
+import ConfirmOrder from "./pages/ConfirmOrder";
 
 function App() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
         <Route path="/products/:category" element={<CategoryShop />} />
         <Route path="/products/search?" element={<SearchProduct />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/order/confirm?" element={<ConfirmOrder />} />
         <Route path="/shipping" element={<Shipping />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/product/details/:slug" element={<DetailProduct />} />

@@ -89,17 +89,23 @@ const Orders = () => {
                   </td>
                   <td className="px-6 py-4 md-lg:flex md-lg:flex-col gap-2">
                     <Link to={`/dashboard/order/details/${item._id}`}>
-                      <span className="bg-green-100 text-green-800 text-sm font-normal mr-2 px-4 py-1 rounded">
+                      <span className="bg-blue-100 text-blue-800 text-sm font-normal mr-2 px-4 py-1 rounded">
                         View
                       </span>
                     </Link>
 
-                    <span
-                      className="bg-orange-100 text-orange-800 text-sm font-normal mr-2 px-4 py-1 rounded cursor-pointer"
-                      onClick={() => redirect(item)}
-                    >
-                      Pay Now
-                    </span>
+                    {item.payment_status === "Unpaid" ? (
+                      <span
+                        className="bg-orange-100 text-orange-800 text-sm font-normal mr-2 px-4 py-1 rounded cursor-pointer"
+                        onClick={() => redirect(item)}
+                      >
+                        Pay Now
+                      </span>
+                    ) : (
+                      <span className="bg-green-100 text-green-800 text-sm font-normal mr-2 px-8 py-1 rounded ">
+                        Paid
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

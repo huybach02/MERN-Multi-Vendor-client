@@ -6,7 +6,7 @@ import {useLocation} from "react-router-dom";
 
 const Payment = () => {
   const {
-    state: {price, items},
+    state: {price, items, orderId},
   } = useLocation();
 
   const [paymentMethod, setPaymentMethod] = useState("stripe");
@@ -39,7 +39,7 @@ const Payment = () => {
                 </div>
                 {paymentMethod === "stripe" && (
                   <div>
-                    <Stripe />
+                    <Stripe orderId={orderId} price={price} />
                   </div>
                 )}
               </div>
