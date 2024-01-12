@@ -60,7 +60,7 @@ const ConfirmOrder = () => {
     if (orderId) {
       try {
         await axios.get(
-          `http://localhost:5000/api/home/order/confirm/${orderId}`
+          `https://mern-multivendor-server.onrender.com/api/home/order/confirm/${orderId}`
         );
         localStorage.removeItem("orderId");
         setLoader(false);

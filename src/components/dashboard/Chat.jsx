@@ -16,7 +16,7 @@ import {
 import toast from "react-hot-toast";
 import {useRef} from "react";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://mern-multivendor-server.onrender.com");
 
 const Chat = () => {
   const dispatch = useDispatch();
