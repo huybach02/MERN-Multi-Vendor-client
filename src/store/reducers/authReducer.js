@@ -28,6 +28,19 @@ export const customer_login = createAsyncThunk(
   }
 );
 
+export const customer_logout = createAsyncThunk(
+  "auth/customer_logout",
+  async (info, {rejectWithValue, fulfillWithValue}) => {
+    // try {
+    //   const {data} = await api.get("/customer/customer-logout");
+    //   localStorage.removeItem("customerToken");
+    //   return fulfillWithValue(data);
+    // } catch (error) {
+    //   return rejectWithValue(error.response.data);
+    // }
+  }
+);
+
 const decodeToken = (token) => {
   if (token) {
     const userInfo = jwtDecode(token);
@@ -49,6 +62,9 @@ export const authReducer = createSlice({
     clearMessage: (state, action) => {
       state.errorMessage = "";
       state.successMessage = "";
+    },
+    clearUserInfo: (state, action) => {
+      state.userInfo = "";
     },
   },
   extraReducers: (builder) => {
@@ -80,9 +96,23 @@ export const authReducer = createSlice({
       .addCase(customer_login.rejected, (state, action) => {
         state.loader = false;
         state.errorMessage = action.payload.error;
+      })
+      .addCase(customer_logout.pending, (state, action) => {
+        state.loader = true;
+        state.errorMessage = "";
+        state.successMessage = "";
+      })
+      .addCase(customer_logout.fulfilled, (state, action) => {
+        state.loader = false;
+        state.successMessage = action.payload.msg;
+        state.userInfo = "";
+      })
+      .addCase(customer_logout.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
       });
   },
 });
 
 export default authReducer.reducer;
-export const {clearMessage} = authReducer.actions;
+export const {clearMessage, clearUserInfo} = authReducer.actions;

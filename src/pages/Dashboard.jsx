@@ -1,17 +1,41 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import {FaList} from "react-icons/fa6";
-import {Link, Outlet} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import {MdDashboard} from "react-icons/md";
 import {GiPapers} from "react-icons/gi";
 import {FaHeart} from "react-icons/fa";
 import {BsChatRightDotsFill} from "react-icons/bs";
 import {FaUserLock} from "react-icons/fa6";
 import {RiLogoutBoxFill} from "react-icons/ri";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  customer_logout,
+  clearMessage,
+  clearUserInfo,
+} from "../store/reducers/authReducer";
+import toast from "react-hot-toast";
+import {resetCount} from "../store/reducers/cartReducer";
+import api from "../api/api";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [filterShow, setFilterShow] = useState(false);
+
+  const logout = async () => {
+    try {
+      const {data} = await api.get("/customer/customer-logout");
+      localStorage.removeItem("customerToken");
+      dispatch(resetCount());
+      dispatch(clearUserInfo());
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -75,7 +99,10 @@ const Dashboard = () => {
                     Change Password
                   </Link>
                 </li>
-                <li className="flex items-center gap-3 py-3 text-xl font-semibold">
+                <li
+                  className="flex items-center gap-3 py-3 text-xl font-semibold"
+                  onClick={logout}
+                >
                   <span>
                     <RiLogoutBoxFill size={24} />
                   </span>

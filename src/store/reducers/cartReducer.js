@@ -128,6 +128,10 @@ export const cartReducer = createSlice({
       state.errorMessage = "";
       state.successMessage = "";
     },
+    resetCount: (state, action) => {
+      state.cartProductCount = 0;
+      state.wishListCount = 0;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(add_to_cart.pending, (state, action) => {
@@ -224,4 +228,4 @@ export const cartReducer = createSlice({
 });
 
 export default cartReducer.reducer;
-export const {clearMessage} = cartReducer.actions;
+export const {clearMessage, resetCount} = cartReducer.actions;

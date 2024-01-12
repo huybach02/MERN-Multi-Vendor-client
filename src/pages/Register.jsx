@@ -133,6 +133,20 @@ const Register = () => {
                   </Link>
                 </p>
               </div>
+              <div className="text-center text-slate-600 p-3 mt-5 border border-blue-500 rounded-md">
+                <p className="md-lg:flex md-lg:flex-col md-lg:gap-2">
+                  <span className="text-lg font-semibold">
+                    Become a seller ?
+                  </span>{" "}
+                  <a
+                    className=" font-semibold hover:underline py-2 px-5 bg-main rounded-md"
+                    href="http://localhost:3001/login"
+                    target="__blank"
+                  >
+                    Click here
+                  </a>
+                </p>
+              </div>
             </div>
             <div className="w-full h-full py-4 pr-4 md-lg:hidden">
               <img

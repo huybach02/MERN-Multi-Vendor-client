@@ -7,6 +7,9 @@ import {FaShoppingCart, FaHeart} from "react-icons/fa";
 import logo from "../assets/logo.png";
 
 const Footer = () => {
+  const {cartProductCount, wishListCount} = useSelector((state) => state.cart);
+  const {userInfo} = useSelector((state) => state.auth);
+
   return (
     <footer className="bg-white border-t border-gray-400/30">
       <div className="w-[85%] flex flex-wrap mx-auto border-b py-16 md-lg:pb-10 sm:pb-6">
@@ -133,16 +136,28 @@ const Footer = () => {
 
       <div className="hidden fixed md-lg:block w-[50px] bottom-3 h-[110px] right-2  rounded-full p-2">
         <div className="w-full h-full flex gap-3 flex-col justify-center items-center">
-          <div className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-gray-400/30">
+          <Link
+            to={userInfo?.id ? "/cart" : "/login"}
+            className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-gray-400/30"
+          >
             <span className="text-lg">
               <FaShoppingCart color="#284196" />
             </span>
-          </div>
-          <div className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-gray-400/30">
+            <div className="w-[20px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[10px]">
+              {cartProductCount > 99 ? "99+" : cartProductCount}
+            </div>
+          </Link>
+          <Link
+            to={userInfo?.id ? "/dashboard/my-wishlist" : "/login"}
+            className="relative flex justify-center items-center cursor-pointer w-[35px] h-[35px] rounded-full bg-gray-400/30"
+          >
             <span className="text-lg">
               <FaHeart color="#ec3850" />
             </span>
-          </div>
+            <div className="w-[20px] h-[20px] absolute bg-blue-500 rounded-full text-white flex justify-center items-center -top-[6px] -right-[5px] text-[10px]">
+              {wishListCount}
+            </div>
+          </Link>
         </div>
       </div>
     </footer>
