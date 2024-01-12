@@ -140,7 +140,7 @@ const Register = () => {
                   </span>{" "}
                   <a
                     className=" font-semibold hover:underline py-2 px-5 bg-main rounded-md"
-                    href="http://localhost:3001/login"
+                    href="https://mern-multi-vendor-dashboard.vercel.app/login"
                     target="__blank"
                   >
                     Click here
